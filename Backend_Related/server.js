@@ -20,6 +20,7 @@ const assignmentRoutes = require('./routes/assignments');
 const updateRoutes = require('./routes/updates');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const coordinatorRoutes = require('./routes/coordinators'); // Near the top with other imports
 
 app.use('/api/buses', busRoutes);
 app.use('/api/drivers', driverRoutes);
@@ -29,6 +30,7 @@ app.use('/api/assignments', assignmentRoutes);
 app.use('/api/updates', updateRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/coordinators', coordinatorRoutes);            // Near other app.use lines
 
 // Health check
 app.get('/api/health', (req, res) => {

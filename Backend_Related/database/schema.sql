@@ -1,4 +1,3 @@
--- GEU Bus Route Management System - Complete Database Schema
 
 CREATE DATABASE IF NOT EXISTS bus_route_management;
 USE bus_route_management;

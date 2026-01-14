@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Bus Route Management</title>
+    <title>Transport Coordinator Dashboard - Bus Route Management</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  background: #2259ab;background: linear-gradient(90deg, rgba(34, 89, 171, 1) 43%, rgba(65, 118, 204, 1) 100%, rgba(86, 176, 124, 1) 100%, rgba(237, 221, 83, 1) 100%); min-height: 100vh; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
         .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); padding: 40px; }
         .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e0e0e0; position: relative; }
         .header h1 { color: #333; font-size: 32px; margin-bottom: 5px; }
@@ -51,7 +51,7 @@
     <div class="container">
         <div class="header">
             <button class="logout-header" onclick="logout()">Logout</button>
-            <h1>🔐 Admin Dashboard</h1>
+            <h1>📋 Transport Coordinator Dashboard</h1>
             <p>Bus Route Management System</p>
         </div>
         
@@ -62,8 +62,6 @@
             <button class="tab-btn" onclick="showTab('monitor')">Live Monitor</button>
             <button class="tab-btn" onclick="showTab('buses')">Manage Buses</button>
             <button class="tab-btn" onclick="showTab('drivers')">Manage Drivers</button>
-            <button class="tab-btn" onclick="showTab('coordinators')">Manage Coordinators</button>
-            <button class="tab-btn" onclick="showTab('students')">Manage Students</button>
             <button class="tab-btn" onclick="showTab('routes')">Manage Routes</button>
             <button class="tab-btn" onclick="showTab('updates')">Send Updates</button>
         </div>
@@ -206,64 +204,6 @@
                 <tbody id="driversTableBody"></tbody>
             </table>
         </div>
-        <div id="coordinators" class="tab-content">
-    <h2 class="section-title">Manage Transport Coordinators</h2>
-    <div class="card">
-        <h3 style="margin-bottom: 15px;">Add New Coordinator</h3>
-        <form id="addCoordinatorForm">
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Coordinator ID / Username</label>
-                    <input type="text" id="newCoordId" placeholder="e.g., coord_01" required>
-                </div>
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="newCoordName" placeholder="Enter full name" required>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-success">Add Coordinator</button>
-        </form>
-    </div>
-    <h3 style="margin-top: 30px; margin-bottom: 15px;">All Coordinators</h3>
-    <div id="coordinatorsLoading" class="loading">Loading coordinators...</div>
-    <table id="coordinatorsTable" style="display: none;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="coordinatorsTableBody"></tbody>
-    </table>
-</div>
-        <!-- Manage Students Tab -->
-        <div id="students" class="tab-content">
-            <h2 class="section-title">Manage Students</h2>
-            <div class="card">
-                <h3 style="margin-bottom: 15px;">Add New Student</h3>
-                <form id="addStudentForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Student ID</label>
-                            <input type="text" id="newStudentId" placeholder="e.g., 2024001" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Student Name</label>
-                            <input type="text" id="newStudentName" placeholder="Enter student name" required>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-success">Add Student</button>
-                </form>
-            </div>
-            <h3 style="margin-top: 30px; margin-bottom: 15px;">All Students</h3>
-            <div id="studentsLoading" class="loading">Loading students...</div>
-            <table id="studentsTable" style="display: none;">
-                <thead><tr><th>Student ID</th><th>Student Name</th><th>Status</th><th>Actions</th></tr></thead>
-                <tbody id="studentsTableBody"></tbody>
-            </table>
-        </div>
 
         <!-- Manage Routes Tab -->
         <div id="routes" class="tab-content">
@@ -399,24 +339,7 @@
             </form>
         </div>
     </div>
-    <div class="modal" id="editCoordinatorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;">
-    <div class="modal-content" style="background: white; padding: 30px; border-radius: 20px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3); position: relative;">
-        <button class="modal-close" onclick="closeEditCoordModal()" style="position: absolute; top: 15px; right: 15px; background: #ef4444; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 18px;">×</button>
-        <h3 style="margin-bottom: 20px; color: #667eea;">Edit Coordinator</h3>
-        <form id="editCoordinatorForm">
-            <input type="hidden" id="editCoordOldId">
-            <div class="form-group">
-                <label>Coordinator ID</label>
-                <input type="text" id="editCoordId" required>
-            </div>
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="editCoordName" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </form>
-    </div>
-</div>
+
     <!-- Edit Student Modal -->
     <div class="modal" id="editStudentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;">
         <div class="modal-content" style="background: white; padding: 30px; border-radius: 20px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3); position: relative;">
@@ -735,135 +658,7 @@
             document.getElementById('editDriverModal').style.display = 'none';
             document.getElementById('editDriverForm').reset();
         }
-// 1. Update the showTab function to include coordinators
-function showTab(tabName) {
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(tabName).classList.add('active');
-    
-    // Safety check for event target
-    if(event && event.target) event.target.classList.add('active');
-    
-    // Data loading logic
-    if(tabName === 'overview') updateStats();
-    if(tabName === 'monitor') loadMonitorData();
-    if(tabName === 'coordinators') loadCoordinators(); // Add this
-    if(tabName === 'buses') loadBuses();
-    if(tabName === 'drivers') loadDrivers();
-    if(tabName === 'students') loadStudents();
-    if(tabName === 'routes') loadRoutes();
-    if(tabName === 'updates') loadSentUpdates();
-}
 
-// 2. Load Coordinators from API
-async function loadCoordinators() {
-    try {
-        const response = await fetch(`${API_URL}/coordinators`);
-        const coords = await response.json();
-        
-        document.getElementById('coordinatorsLoading').style.display = 'none';
-        document.getElementById('coordinatorsTable').style.display = 'table';
-        
-        const tbody = document.getElementById('coordinatorsTableBody');
-        tbody.innerHTML = '';
-        
-        coords.forEach(coord => {
-            tbody.innerHTML += `
-                <tr>
-                    <td><strong>${coord.id}</strong></td>
-                    <td>${coord.name}</td>
-                    <td><span class="badge">${coord.status || 'active'}</span></td>
-                    <td>
-                        <button class="btn btn-primary" onclick="editCoordinator('${coord.id}')" style="padding: 8px 16px; margin-right: 8px;">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteCoordinator('${coord.id}')" style="padding: 8px 16px;">Remove</button>
-                    </td>
-                </tr>
-            `;
-        });
-    } catch (error) {
-        showMessage('Failed to load coordinators', 'error');
-    }
-}
-
-// 3. Add Coordinator Form Submission
-document.getElementById('addCoordinatorForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    try {
-        await fetch(`${API_URL}/coordinators`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id: document.getElementById('newCoordId').value,
-                name: document.getElementById('newCoordName').value
-            })
-        });
-        showMessage('Coordinator added successfully!');
-        e.target.reset();
-        loadCoordinators();
-    } catch (error) {
-        showMessage('Error adding coordinator', 'error');
-    }
-});
-
-// 4. Delete Coordinator
-async function deleteCoordinator(id) {
-    if(confirm('Are you sure you want to remove this coordinator?')) {
-        try {
-            await fetch(`${API_URL}/coordinators/${id}`, { method: 'DELETE' });
-            showMessage('Coordinator removed successfully!');
-            loadCoordinators();
-        } catch (error) {
-            showMessage('Error deleting coordinator', 'error');
-        }
-    }
-}
-// Open Edit Modal and fill with data
-async function editCoordinator(id) {
-    try {
-        const response = await fetch(`${API_URL}/coordinators`);
-        const coords = await response.json();
-        const coord = coords.find(c => c.id === id);
-        
-        if(!coord) return;
-        
-        document.getElementById('editCoordOldId').value = coord.id;
-        document.getElementById('editCoordId').value = coord.id;
-        document.getElementById('editCoordName').value = coord.name;
-        
-        document.getElementById('editCoordinatorModal').style.display = 'flex';
-    } catch (error) {
-        showMessage('Failed to load coordinator data', 'error');
-    }
-}
-
-// Close Modal
-function closeEditCoordModal() {
-    document.getElementById('editCoordinatorModal').style.display = 'none';
-}
-
-// Handle Update Submission
-document.getElementById('editCoordinatorForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    try {
-        const oldId = document.getElementById('editCoordOldId').value;
-        const response = await fetch(`${API_URL}/coordinators/${oldId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id: document.getElementById('editCoordId').value,
-                name: document.getElementById('editCoordName').value
-            })
-        });
-
-        if (response.ok) {
-            showMessage('Coordinator updated successfully!');
-            closeEditCoordModal();
-            loadCoordinators();
-        }
-    } catch (error) {
-        showMessage('Error updating coordinator', 'error');
-    }
-});
         // Load Students
         async function loadStudents() {
             try {

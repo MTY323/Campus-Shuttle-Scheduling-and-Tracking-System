@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  background: #2259ab;background: linear-gradient(90deg, rgba(34, 89, 171, 1) 43%, rgba(65, 118, 204, 1) 100%, rgba(86, 176, 124, 1) 100%, rgba(237, 221, 83, 1) 100%); }
         .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); padding: 40px; }
         h1 { color: #333; text-align: center; margin-bottom: 10px; font-size: 32px; }
         .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 16px; }
@@ -57,6 +57,18 @@
         .detail-row:last-child { border-bottom: none; }
         .detail-label { font-weight: 600; color: #666; }
         .detail-value { color: #333; text-align: right; }
+        .text-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    margin-top: 5px;
+}
+.text-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
     </style>
 </head>
 <body>
@@ -120,7 +132,9 @@
                 </div>
                 <div id="busMap"></div>
             </div>
-
+            <button class="btn btn-primary" style="margin-top: 20px; background: #4a5568;" onclick="openPasswordModal()">
+        🔐 Change Password
+    </button>
             <div style="margin-top: 30px;">
                 <h2 class="section-title">📢 Updates & Announcements</h2>
                 <div id="updatesContainer" class="loading">Loading updates...</div>
@@ -137,7 +151,23 @@
             <div id="busDetailsContent"></div>
         </div>
     </div>
-
+<div class="modal" id="passwordModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closePasswordModal()">×</button>
+        <h2 class="section-title">🔐 Change Password</h2>
+        <form id="passwordForm">
+            <div class="form-group">
+                <label>Current Password</label>
+                <input type="password" id="currentPass" class="text-input" style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #e0e0e0;" required>
+            </div>
+            <div class="form-group">
+                <label>New Password</label>
+                <input type="password" id="newPass" class="text-input" style="width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #e0e0e0;" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Password</button>
+        </form>
+    </div>
+</div>
     <script>
         const API_URL = 'http://localhost:3000/api';
         let currentStudent = null;
@@ -747,6 +777,44 @@
                 clearInterval(modalCountdownInterval);
             }
         }
+        function openPasswordModal() {
+    document.getElementById('passwordModal').classList.add('active');
+}
+
+function closePasswordModal() {
+    document.getElementById('passwordModal').classList.remove('active');
+    document.getElementById('passwordForm').reset();
+}
+
+document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const currentPassword = document.getElementById('currentPass').value;
+    const newPassword = document.getElementById('newPass').value;
+
+    try {
+        const response = await fetch(`${API_URL}/students/change-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                student_id: currentStudent,
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert('Password updated successfully!');
+            closePasswordModal();
+        } else {
+            alert(result.message || 'Failed to update password');
+        }
+    } catch (error) {
+        alert('Error connecting to server: ' + error.message);
+    }
+});
 
         function logout() {
             if(confirm('Are you sure you want to logout?')) {

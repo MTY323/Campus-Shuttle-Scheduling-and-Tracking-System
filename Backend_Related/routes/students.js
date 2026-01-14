@@ -50,7 +50,34 @@ router.post('/requests', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+// Change student password
+router.post('/change-password', async (req, res) => {
+    try {
+        const { student_id, currentPassword, newPassword } = req.body;
 
+        // 1. Check if student exists and verify current password
+        // Note: In a production app, use bcrypt to compare hashed passwords
+        const [students] = await db.query(
+            'SELECT * FROM students WHERE id = ? AND password = ?', 
+            [student_id, currentPassword]
+        );
+
+        if (students.length === 0) {
+            return res.status(401).json({ message: 'Current password is incorrect' });
+        }
+
+        // 2. Update to new password
+        await db.query(
+            'UPDATE students SET password = ? WHERE id = ?',
+            [newPassword, student_id]
+        );
+
+        res.json({ message: 'Password updated successfully' });
+    } catch (error) {
+        console.error('Change password error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 // Get student requests
 router.get('/requests', async (req, res) => {
     try {

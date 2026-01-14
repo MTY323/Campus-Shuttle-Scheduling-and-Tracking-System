@@ -8,7 +8,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            background: #2259ab;
+            background: linear-gradient(90deg, rgba(34, 89, 171, 1) 43%, rgba(65, 118, 204, 1) 100%, rgba(86, 176, 124, 1) 100%, rgba(237, 221, 83, 1) 100%); 
             min-height: 100vh; 
             display: flex;
             align-items: center;
@@ -24,7 +25,8 @@
             overflow: hidden;
         }
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #2259ab;
+            background: linear-gradient(90deg, rgba(34, 89, 171, 1) 43%, rgba(65, 118, 204, 1) 100%, rgba(86, 176, 124, 1) 100%, rgba(237, 221, 83, 1) 100%);
             color: white;
             padding: 40px 30px;
             text-align: center;
@@ -35,7 +37,7 @@
         .content { padding: 40px 30px; }
         .role-selector {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin-bottom: 30px;
         }
@@ -138,6 +140,10 @@
                     <div class="role-icon">👨‍✈️</div>
                     <div class="role-name">Driver</div>
                 </div>
+                <div class="role-btn" onclick="selectRole('coordinator')">
+                    <div class="role-icon">📋</div>
+                    <div class="role-name">Transport Coordinator</div>
+                </div>
                 <div class="role-btn" onclick="selectRole('admin')">
                     <div class="role-icon">👔</div>
                     <div class="role-name">Admin</div>
@@ -196,7 +202,11 @@
                 usernameLabel.textContent = 'Driver Contact Number';
                 usernameInput.placeholder = 'Enter your contact number';
                 passwordGroup.style.display = 'block';
-            } else if (role === 'admin') {
+            } else if (role === 'coordinator') {
+                usernameLabel.textContent = 'Coordinator ID';
+                usernameInput.placeholder = 'Enter coordinator ID';
+                passwordGroup.style.display = 'block';}
+             else if (role === 'admin') {
                 usernameLabel.textContent = 'Admin Username';
                 usernameInput.placeholder = 'Enter admin username';
                 passwordGroup.style.display = 'block';
@@ -281,7 +291,28 @@
                     // Redirect to driver portal
                     window.location.href = 'Frontend_Related/driver_frontend_api.html?driver_id=' + data.driver.driver_id;
                     
-                } else if (selectedRole === 'admin') {
+                } else if (selectedRole === 'coordinator') {
+                    // Authenticate coordinator
+                    const response = await fetch(`${API_URL}/auth/coordinator/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            coordinator_id: username,
+                            password: password
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        showError(data.error || 'Login failed');
+                        return;
+                    }
+                    
+                    // Redirect to coordinator portal
+                    window.location.href = 'Frontend_Related/coordinator_frontend_api.html';
+                } 
+                else if (selectedRole === 'admin') {
                     // Authenticate admin
                     const response = await fetch(`${API_URL}/auth/admin/login`, {
                         method: 'POST',
