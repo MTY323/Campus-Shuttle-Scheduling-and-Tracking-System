@@ -310,8 +310,7 @@
                     }
                     
                     // Redirect to coordinator portal
-                    window.location.href = 'Frontend_Related/coordinator_frontend_api.html';
-                } 
+                    window.location.href = 'Frontend_Related/TransportCoordinator_frontend_api.html?coord_id=' + username;                } 
                 else if (selectedRole === 'admin') {
                     // Authenticate admin
                     const response = await fetch(`${API_URL}/auth/admin/login`, {

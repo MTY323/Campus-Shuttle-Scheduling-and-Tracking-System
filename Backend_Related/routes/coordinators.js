@@ -16,11 +16,12 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { id, name } = req.body;
+        const defaultPassword = 'coord123'; // Define your default here
         await db.query(
-            'INSERT INTO coordinators (id, name, status) VALUES (?, ?, ?)',
-            [id, name, 'active']
+            'INSERT INTO coordinators (id, name, status, password) VALUES (?, ?, ?, ?)',
+            [id, name, 'active', defaultPassword]
         );
-        res.status(201).json({ message: 'Coordinator added successfully' });
+        res.status(201).json({ message: 'Coordinator added with default password: ' + defaultPassword });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

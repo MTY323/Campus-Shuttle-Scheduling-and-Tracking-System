@@ -76,7 +76,23 @@ router.post('/driver/login', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+router.post('/coordinator/login', async (req, res) => {
+    const { coordinator_id, password } = req.body;
+    try {
+        const [rows] = await db.query(
+            'SELECT * FROM coordinators WHERE id = ? AND password = ?', 
+            [coordinator_id, password]
+        );
 
+        if (rows.length > 0) {
+            res.json({ message: 'Login successful', coordinator: rows[0] });
+        } else {
+            res.status(401).json({ error: 'Invalid ID or Password' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 // Admin login
 router.post('/admin/login', async (req, res) => {
     try {
